@@ -2,6 +2,27 @@
 import streamlit as st
 import requests
 from pathlib import Path
+import os
+from pathlib import Path
+from Crypto.PublicKey import RSA
+
+KEYS_DIR = Path(__file__).parent / "keys"
+PRIVATE_KEY_PATH = KEYS_DIR / "recipient_private.pem"
+PUBLIC_KEY_PATH = KEYS_DIR / "recipient_public.pem"
+
+def generate_rsa_keypair(bits=2048):
+    """Generate and save RSA keypair if not exists"""
+    KEYS_DIR.mkdir(exist_ok=True)
+    if not PRIVATE_KEY_PATH.exists() or not PUBLIC_KEY_PATH.exists():
+        key = RSA.generate(bits)
+        # Save private key
+        with open(PRIVATE_KEY_PATH, "wb") as f:
+            f.write(key.export_key())
+        # Save public key
+        with open(PUBLIC_KEY_PATH, "wb") as f:
+            f.write(key.publickey().export_key())
+        return True
+    return False
 
 BACKEND_URL = st.secrets.get("backend_url", "http://localhost:8000")
 
@@ -83,3 +104,18 @@ else:
                     st.error(f"Decrypt failed: {r.status_code} — {r.text}")
             except Exception as e:
                 st.error(f"Error contacting backend: {e}")
+
+st.sidebar.subheader("🔑 Key Management")
+
+if PUBLIC_KEY_PATH.exists() and PRIVATE_KEY_PATH.exists():
+    st.sidebar.write("Keys are available.")
+
+    with open(PUBLIC_KEY_PATH, "rb") as f:
+        st.sidebar.download_button("⬇️ Download Public Key", f, file_name="recipient_public.pem")
+
+    with open(PRIVATE_KEY_PATH, "rb") as f:
+        st.sidebar.download_button("⬇️ Download Private Key", f, file_name="recipient_private.pem")
+
+if st.sidebar.button("Generate Keys"):
+    generate_rsa_keypair(2048)
+    st.sidebar.success("Keys generated.")
