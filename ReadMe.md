@@ -1,32 +1,4 @@
-# Deploy & Run (local)
-
-1. Create virtualenv and install dependencies
-
-```bash
-python -m venv .venv
-source .venv/bin/activate   # on Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-2. Start the backend Flask server
-
-```bash
-cd backend
-python app.py
-# server will listen on http://0.0.0.0:8000
-```
-
-3. Start Streamlit frontend (in project root)
-
-```bash
-streamlit run frontend/streamlit_app.py
-```
-
-4. In the Streamlit UI select the right page (Encrypt / Decrypt) and provide keys & files.
-
-Notes:
-
-## Secure File Transfer (AES + RSA)
+# Secure File Transfer (AES + RSA)
 
 This project is a hybrid web application combining Streamlit (frontend) and Flask (backend) to enable secure file transfer using AES and RSA encryption. It demonstrates how to encrypt files with AES, securely exchange keys using RSA, and transfer files between users.
 
@@ -43,11 +15,21 @@ This project is a hybrid web application combining Streamlit (frontend) and Flas
 
 ### Setup Instructions
 
-1. **Install dependencies**
+1. **Set Up a Virtual Environment and Install Dependencies**
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+    - Create a virtual environment
+       ```bash
+        python -m venv venv
+        On Windows:
+        venv\Scripts\activate
+        On macOS/Linux:
+        source venv/bin/activate
+       ```
+
+    - Install required libraries
+      ```bash
+      pip install -r requirements.txt
+      ```
 
 2. **Generate RSA Keys**
 
